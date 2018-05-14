@@ -2,3 +2,4 @@ pandas
 mongoengine
 flask
 kaggle
+Flask-Cors
