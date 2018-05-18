@@ -1,0 +1,71 @@
+<html>
+  <head>
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['{{ cols[1] }}', '{{ cols[2] }}'],
+            {% for record in data %}
+
+          [ {v: {{ record[1] }}, f:'{{record[0]}}' }, {{ record[2] }}],
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: '{{year}} {{ cols[1] }} vs. {{ cols[2] }} comparison',
+          hAxis: {title: '{{ cols[1] }}', minValue: 0},
+          vAxis: {title: '{{ cols[2] }}', minValue: 0},
+          legend: 'none'
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    <div><p>Pearson Correlation Coefficient: {{ pr|round(2) }}</p>
+    <p>P_Value: {{ p|round(5) }}</p></div>
+    <!--select features-->
+    <div>
+    <form action="{{url_for('correlation_analysis.analyse_pm_happy')}}" method="POST">
+        <label>Please choose year and features: </label>
+      	  <select name="year" id="year">
+	          <option value='{{year}}' selected>{{year}}</option>
+              <option value="2015">2015</option>
+              <option value="2016">2016</option>
+
+	      </select>
+
+      	  <select name="pm_happy_feature1" id="pm_happy_feature1">
+	        <option value='{{cols[1]}}' selected>{{cols[1]}}</option>
+	        {% for feature in features %}
+
+	        	<option value="{{feature}}">{{feature}}</option>
+	        {% endfor %}
+
+	      </select>
+	      <select name="pm_happy_feature2" id="pm_happy_feature2">
+	        <option value='{{cols[2]}}' selected>{{cols[2]}}</option>
+	        {% for feature in features %}
+
+	        	<option value="{{feature}}">{{feature}}</option>
+	        {% endfor %}
+	      </select>
+    	  <button type="submit" class="btn btn-primary btn-sm">Compare</button>
+
+    </form>
+    <!--select features-->
+    </div>
+  </body>
+</html>
