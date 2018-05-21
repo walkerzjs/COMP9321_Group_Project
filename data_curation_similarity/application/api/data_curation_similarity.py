@@ -6,9 +6,12 @@ from scipy import spatial
 
 mod = Blueprint('data_curation_similarity', __name__)
 
-url = "http://127.0.0.1:5000/"
+urlWorldHappiness = "http://127.0.0.1:5000/"
+urlPollution = "http://127.0.0.1:5002/"
 worldHappinessRouteSingle = "api/world_happiness/"
 worldHappinessRouteAll = "api/world_happiness/"
+pollutionRouteSingle = "api/air_pollution/filter"
+pollutionRouteAll = "api/air_pollution/"
 
 
 # Computes the similarity of two countries based on world happiness report
@@ -18,11 +21,16 @@ def compute_similarity():
     country2 = request.args.get('country2')
     year = request.args.get('year')
 
-    country1Data = requests.get(url + worldHappinessRouteSingle + country1)
-    country2Data = requests.get(url + worldHappinessRouteSingle + country2)
+    country1Data = requests.get(urlWorldHappiness + worldHappinessRouteSingle + country1)
+    country2Data = requests.get(urlWorldHappiness + worldHappinessRouteSingle + country2)
+
+    country1Pollution = requests.get(urlPollution + pollutionRouteSingle + "?country=" + country1 + "&year=" + year)
+    country2Pollution = requests.get(urlPollution + pollutionRouteSingle + "?country=" + country2 + "&year=" + year)
 
     country1JSON = country1Data.json()
+    country1JSONPollution = country1Pollution.json()
     country2JSON = country2Data.json()
+    country2JSONPollution = country2Pollution.json()
 
     country1Array = [country1JSON['Happiness Rank'][year],
                      country1JSON['Happiness Score'][year],
@@ -33,6 +41,7 @@ def compute_similarity():
                      country1JSON['Trust Government Corruption'][year],
                      country1JSON['Generosity'][year],
                      country1JSON['Dystopia Residual'][year],
+                     country1JSONPollution[year]
                      ]
 
     country2Array = [country2JSON['Happiness Rank'][year],
@@ -44,6 +53,7 @@ def compute_similarity():
                      country2JSON['Trust Government Corruption'][year],
                      country2JSON['Generosity'][year],
                      country2JSON['Dystopia Residual'][year],
+                     country2JSONPollution[year]
                      ]
 
     result = 1 - spatial.distance.cosine(country1Array, country2Array)
@@ -57,11 +67,11 @@ def compute_similarity():
 # Computes the similarity of one country compared to every other country based on world happiness report
 @mod.route('/api/similarity/all', methods=['GET'])
 def compute_similarity_all():
-    country1 = request.args.get('country1')
+    country1 = request.args.get('country')
     year = request.args.get('year')
 
-    country1Data = requests.get(url + worldHappinessRouteSingle + country1)
-    allCountryData = requests.get(url + worldHappinessRouteAll + year)
+    country1Data = requests.get(urlWorldHappiness + worldHappinessRouteSingle + country1)
+    allCountryData = requests.get(urlWorldHappiness + worldHappinessRouteAll + year)
 
     country1JSON = country1Data.json()
     allCountryJSON = allCountryData.json()
