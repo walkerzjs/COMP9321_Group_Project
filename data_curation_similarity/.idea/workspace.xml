@@ -18,7 +18,7 @@
       <file leaf-file-name="data_curation_similarity.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/api/data_curation_similarity.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
+            <state relative-caret-position="561">
               <caret line="44" column="63" lean-forward="true" selection-start-line="44" selection-start-column="63" selection-end-line="44" selection-end-column="63" />
               <folding />
             </state>
@@ -102,12 +102,6 @@
               <item name="data_curation_similarity" type="462c0819:PsiDirectoryNode" />
               <item name="application" type="462c0819:PsiDirectoryNode" />
               <item name="api" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="data_curation_similarity" type="b2602c69:ProjectViewProjectNode" />
-              <item name="data_curation_similarity" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -279,7 +273,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/api/data_curation_similarity.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
+        <state relative-caret-position="561">
           <caret line="44" column="63" lean-forward="true" selection-start-line="44" selection-start-column="63" selection-end-line="44" selection-end-column="63" />
           <folding />
         </state>
