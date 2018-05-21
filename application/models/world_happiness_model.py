@@ -1,6 +1,7 @@
 from mongoengine import *
 from copy import deepcopy
-import os, subprocess, pathlib, shutil
+from pathlib import Path
+import subprocess, shutil, re
 import pandas as pd
 
 
@@ -25,14 +26,20 @@ if _entry_set:
 
 def create_entries():
     global collection_created
-    home = str(pathlib.Path.home())
-    if not os.path.isdir(home + '/.kaggle'):
-        os.makedirs(home + '/.kaggle', exist_ok=True)
-    shutil.copy2('./application/data/kaggle.json', home + '/.kaggle')
+    kaggle_folder = Path.home() / '.kaggle'
+    if not kaggle_folder.is_dir():
+        kaggle_folder.mkdir(exist_ok=True)
+    kaggle_json = Path('./application/data/kaggle.json')
+    shutil.copy2(kaggle_json, kaggle_folder)
+
+    data_folder = Path('./application/data')
     for year in [2015, 2016, 2017]:
-        subprocess.run(('kaggle datasets download -d unsdsn/world-happiness '
-                '-f ' + str(year) + '.csv -p ./application/data'), shell=True)
-        data = pd.read_csv('./application/data/' + str(year) + '.csv')
+        file_name = str(year) + '.csv'
+        subprocess.run(['kaggle', 'datasets', 'download', '-d',
+                        'unsdsn/world-happiness', '-f', file_name,
+                        '-p', str(data_folder)])
+
+        data = pd.read_csv(data_folder / file_name)
         data.set_index('Country', inplace=True)
         if year == 2017:
             data.rename(index={'Hong Kong S.A.R., China': 'Hong Kong',
@@ -72,6 +79,8 @@ def get_entry_by_year(year):
     if not collection_created:
         create_entries()
     entry_set = WorldHappiness.objects(year=year)
+    if not entry_set:
+        return None
     for entry in entry_set:
         entry_dict = entry.to_mongo()
         del entry_dict['_id']
@@ -87,12 +96,19 @@ def get_entries_by_country(country):
     collection = sorted(get_collection(), key=lambda entry: entry['year'])
     data = []
     index = []
+    has_data = False
     for entry in collection:
         df = pd.DataFrame(entry['data'])
         df.reset_index(inplace=True)
         df.rename(columns={'index': 'Country'}, inplace=True)
-        data.append(deepcopy(df[df['Country'] == country].iloc[0]))
-        index.append(entry['year'])
+        pattern = re.compile(r'^' + country + r'$', re.IGNORECASE)
+        match = df[df['Country'].str.match(pattern)]
+        if not match.empty:
+            data.append(deepcopy(match.iloc[0]))
+            index.append(entry['year'])
+            has_data = True
+    if not has_data:
+        return None
     country_df = pd.DataFrame(data, index=index)
     country_df.dropna(axis=1, inplace=True)  # Drop columns with any NAN values.
     return country_df.to_dict()
@@ -104,10 +120,15 @@ def get_entries_by_country(country):
 def get_entry_by_filter(year, country):
     if not collection_created:
         create_entries()
+    if year not in [2015, 2016, 2017]:
+        return None
     df = pd.DataFrame(get_entry_by_year(year)['data'])
     df.reset_index(inplace=True)
     df.rename(columns={'index': 'Country'}, inplace=True)
-    country_df = df[df['Country'] == country]
+    pattern = re.compile(r'^' + country + r'$', re.IGNORECASE)
+    country_df = df[df['Country'].str.match(pattern)]
+    if country_df.empty:
+        return None
     country_df.index = [year]
     return country_df.to_dict()
 
