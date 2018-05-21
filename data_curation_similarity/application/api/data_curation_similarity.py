@@ -3,6 +3,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 from application.models import similarity_model
 import numpy as np
 import requests
+from scipy import spatial
 
 mod = Blueprint('data_curation_similarity', __name__)
 
@@ -19,29 +20,34 @@ def compute_similarity():
     country1Data = requests.get(url + worldHappinessRoute + country1)
     country2Data = requests.get(url + worldHappinessRoute + country2)
 
-    print(country1Data.json())
-    # if country1Data:
-    #     return country1Data.json(), 200
-    # else:
-    #     raise NotFound
+    country1JSON = country1Data.json()
+    country2JSON = country2Data.json()
 
-    return 404
+    country1Array = [country1JSON['Happiness Rank']['2015'],
+                     country1JSON['Happiness Score']['2015'],
+                     country1JSON['Economy GDP per Capita']['2015'],
+                     country1JSON['Family']['2015'],
+                     country1JSON['Health Life Expectancy']['2015'],
+                     country1JSON['Freedom']['2015'],
+                     country1JSON['Trust Government Corruption']['2015'],
+                     country1JSON['Generosity']['2015'],
+                     country1JSON['Dystopia Residual']['2015'],
+                     ]
 
+    country2Array = [country2JSON['Happiness Rank']['2015'],
+                     country2JSON['Happiness Score']['2015'],
+                     country2JSON['Economy GDP per Capita']['2015'],
+                     country2JSON['Family']['2015'],
+                     country2JSON['Health Life Expectancy']['2015'],
+                     country2JSON['Freedom']['2015'],
+                     country2JSON['Trust Government Corruption']['2015'],
+                     country2JSON['Generosity']['2015'],
+                     country2JSON['Dystopia Residual']['2015'],
+                     ]
 
-# def cos_sim(a, b):
-#     # Takes 2 vectors a, b and returns the cosine similarity according to the definition of the dot product
-#     dot_product = np.dot(a, b)
-#     norm_a = np.linalg.norm(a)
-#     norm_b = np.linalg.norm(b)
-#
-#     return dot_product / (norm_a * norm_b)
-#
-#
-# # the counts we computed above
-# sentence_m = np.array([1, 1, 1, 1, 0, 0, 0, 0, 0])
-# sentence_h = np.array([0, 0, 1, 1, 1, 1, 0, 0, 0])
-# sentence_w = np.array([0, 0, 0, 1, 0, 0, 1, 1, 1])
-#
-# # We should expect sentence_m and sentence_h to be more similar
-# print(cos_sim(sentence_m, sentence_h))  # 0.5
-# print(cos_sim(sentence_m, sentence_w))  # 0.25
+    result = 1 - spatial.distance.cosine(country1Array, country2Array)
+
+    if country1Data and country2Data:
+        return jsonify(Country1=country1Array, Country2=country2Array, Similarity=result), 200
+    else:
+        raise NotFound

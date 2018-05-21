@@ -3,6 +3,7 @@ from flask_cors import CORS
 from application.api import data_curation_similarity
 
 app = Flask(__name__)
+app.debug = True
 app.register_blueprint(data_curation_similarity.mod)
 CORS(app)
 
