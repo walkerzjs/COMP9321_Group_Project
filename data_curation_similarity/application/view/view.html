@@ -8,11 +8,11 @@
 
 	<body>
 					<!-- Plotly chart will be drawn inside this DIV -->
-			<div id="myDiv"></div>
+			<div id="similarityMap"></div>
 	</body>
 
 	<script>
-		var requestURL = 'http://127.0.0.1:5002/api/similarity/all?country=Australia&year=2015';
+		var requestURL = 'http://127.0.0.1:5002/api/similarity/all?country=China&year=2015';
 		var request = new XMLHttpRequest();
 		request.open('GET', requestURL);
 		request.responseType = 'json';
@@ -24,17 +24,11 @@
 		}
 
 		function populateMap(similarity){
-				var values = [];
-
-				for (let o of Object.keys(similarity.Countries)) {
-				  values.push(similarity.Countries[o]);
-				}
-
 				var data = [{
 					type: 'choropleth',
 					locationmode: 'country names',
 					locations: Object.keys(similarity.Countries),
-					z: values,
+					z: Object.values(similarity.Countries),
 					text: Object.keys(similarity.Countries),
 					autocolorscale: true
 				}];
@@ -48,7 +42,7 @@
 						}
 				};
 				
-				Plotly.plot(myDiv, data, layout, {showLink: false});
+				Plotly.plot(similarityMap, data, layout, {showLink: true});
 			}
 
 
