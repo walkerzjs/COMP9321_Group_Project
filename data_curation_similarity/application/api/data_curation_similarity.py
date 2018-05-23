@@ -7,7 +7,7 @@ from scipy import spatial
 mod = Blueprint('data_curation_similarity', __name__)
 
 urlWorldHappiness = "http://127.0.0.1:5000/"
-urlPollution = "http://127.0.0.1:5002/"
+urlPollution = "http://127.0.0.1:5001/"
 worldHappinessRouteSingle = "api/world_happiness/"
 worldHappinessRouteAll = "api/world_happiness/"
 pollutionRouteSingle = "api/air_pollution/filter"
@@ -32,6 +32,8 @@ def compute_similarity():
     country2JSON = country2Data.json()
     country2JSONPollution = country2Pollution.json()
 
+    print(country1JSON['Happiness Rank'][year])
+    print(country1JSONPollution[year])
     country1Array = [country1JSON['Happiness Rank'][year],
                      country1JSON['Happiness Score'][year],
                      country1JSON['Economy GDP per Capita'][year],
@@ -74,7 +76,7 @@ def compute_similarity_all():
     country1Pollution = requests.get(urlPollution + pollutionRouteSingle + "?country=" + country1 + "&year=" + year)
 
     allCountryData = requests.get(urlWorldHappiness + worldHappinessRouteAll + year)
-    allCountryPollutionData = requests.get(urlWorldHappiness + pollutionRouteAll + year)
+    allCountryPollutionData = requests.get(urlPollution + pollutionRouteAll + year)
 
     country1JSON = country1Data.json()
     country1JSONPollution = country1Pollution.json()
@@ -107,7 +109,16 @@ def compute_similarity_all():
         countryArray.append(allCountryJSON['data']['Trust Government Corruption'][country])
         countryArray.append(allCountryJSON['data']['Generosity'][country])
         countryArray.append(allCountryJSON['data']['Dystopia Residual'][country])
-        countryArray.append(allCountryJSONPollution[country])
+        # JSON pollution is missing for these countries:
+        # Venezuela, Taiwan, Slovakia
+        # South Korea, Russia, North Cyprus, Kosovo, Hong Kongm Kyrgyzstanm,
+        # Somaliland region, Macedonia, Laos, Palestinian, Territories, Iran, Zimbabwe, Congo(Kinshasa), Egypt
+        # Yemen ,Congo(Brazzaville) ,Ivory Coast ,Syria
+        # So set pollution to a default value of 0
+        if country in allCountryJSONPollution:
+            countryArray.append(allCountryJSONPollution[country])
+        else:
+            countryArray.append(0)
 
         result = 1 - spatial.distance.cosine(country1Array, countryArray)
 
