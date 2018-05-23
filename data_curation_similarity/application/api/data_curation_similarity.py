@@ -122,10 +122,12 @@ def compute_similarity_all():
 
         result = 1 - spatial.distance.cosine(country1Array, countryArray)
 
+        d = dict()
+        d['Similarity'] = result
         countryDict[country] = result
 
     if country1Data and countryDict:
-        return jsonify(Similarity=countryDict), 200
+        return jsonify(Countries=countryDict), 200
     else:
         raise NotFound
 

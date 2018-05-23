@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+
+	<body>
+					<!-- Plotly chart will be drawn inside this DIV -->
+			<div id="myDiv"></div>
+	</body>
+
+	<script>
+		var requestURL = 'http://127.0.0.1:5002/api/similarity/all?country=Australia&year=2015';
+		var request = new XMLHttpRequest();
+		request.open('GET', requestURL);
+		request.responseType = 'json';
+		request.send();
+
+		request.onload = function() {
+	  	var similarity = request.response;
+	  	populateMap(similarity);
+		}
+
+		function populateMap(similarity){
+				var values = [];
+
+				for (let o of Object.keys(similarity.Countries)) {
+				  values.push(similarity.Countries[o]);
+				}
+
+				var data = [{
+					type: 'choropleth',
+					locationmode: 'country names',
+					locations: Object.keys(similarity.Countries),
+					z: values,
+					text: Object.keys(similarity.Countries),
+					autocolorscale: true
+				}];
+
+				var layout = {
+						title: 'Similarites between countries (based on Happiness and Pollution)',
+						geo: {
+							projection: {
+								type: 'robinson'
+							}
+						}
+				};
+				
+				Plotly.plot(myDiv, data, layout, {showLink: false});
+			}
+
+
+	</script>
+</html>
+
+				
