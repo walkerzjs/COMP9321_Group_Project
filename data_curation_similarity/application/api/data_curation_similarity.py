@@ -71,10 +71,16 @@ def compute_similarity_all():
     year = request.args.get('year')
 
     country1Data = requests.get(urlWorldHappiness + worldHappinessRouteSingle + country1)
+    country1Pollution = requests.get(urlPollution + pollutionRouteSingle + "?country=" + country1 + "&year=" + year)
+
     allCountryData = requests.get(urlWorldHappiness + worldHappinessRouteAll + year)
+    allCountryPollutionData = requests.get(urlWorldHappiness + pollutionRouteAll + year)
 
     country1JSON = country1Data.json()
+    country1JSONPollution = country1Pollution.json()
+
     allCountryJSON = allCountryData.json()
+    allCountryJSONPollution = allCountryPollutionData.json()
 
     country1Array = [country1JSON['Happiness Rank'][year],
                      country1JSON['Happiness Score'][year],
@@ -85,6 +91,7 @@ def compute_similarity_all():
                      country1JSON['Trust Government Corruption'][year],
                      country1JSON['Generosity'][year],
                      country1JSON['Dystopia Residual'][year],
+                     country1JSONPollution[year]
                      ]
 
     countryDict = {}
@@ -100,6 +107,7 @@ def compute_similarity_all():
         countryArray.append(allCountryJSON['data']['Trust Government Corruption'][country])
         countryArray.append(allCountryJSON['data']['Generosity'][country])
         countryArray.append(allCountryJSON['data']['Dystopia Residual'][country])
+        countryArray.append(allCountryJSONPollution[country])
 
         result = 1 - spatial.distance.cosine(country1Array, countryArray)
 
