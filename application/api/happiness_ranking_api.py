@@ -3,7 +3,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 from application.services import happiness_ranking_service
 
 
-mod = Blueprint('happiness_ranking', __name__)
+mod = Blueprint('happiness_ranking_api', __name__)
 
 
 # requests must supply 'year', 'sort_by' and 'ascending' in query string
