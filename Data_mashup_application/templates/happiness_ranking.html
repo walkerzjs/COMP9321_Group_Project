@@ -19,12 +19,16 @@
       <!-- Must reset the active class for nav-items in javascript on page loading if not home page. -->
       <div class="collapse navbar-collapse" id="navbar">
         <ul class="navbar-nav mr-auto">
+        {% block navbar_rank %}
           <li class="nav-item active" id="nav_item_happy">
             <a class="nav-link" href="/#happiness_ranking">Happiness Ranking</a>
           </li>
+          {% endblock %}
+          {% block navbar_cor %}
           <li class="nav-item" id="nav_item_correlation">
             <a class="nav-link" href="{{url_for('correlation_analysis.analyse_pm_happy')}}">Correlation Analysis</a>
           </li>
+          {% endblock %}
           <li class="nav-item" id="nav_item_similar">
             <a class="nav-link" href="#">Similar Country Searching</a>
           </li>
