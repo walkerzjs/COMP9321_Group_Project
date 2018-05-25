@@ -23,7 +23,7 @@
             <a class="nav-link" href="/#happiness_ranking">Happiness Ranking</a>
           </li>
           <li class="nav-item" id="nav_item_correlation">
-            <a class="nav-link" href="#">Correlation Analysis</a>
+            <a class="nav-link" href="{{url_for('correlation_analysis.analyse_pm_happy')}}">Correlation Analysis</a>
           </li>
           <li class="nav-item" id="nav_item_similar">
             <a class="nav-link" href="#">Similar Country Searching</a>
@@ -35,7 +35,7 @@
       </div>
     </nav>
     {% endblock %}
-    {% block cotent %}
+    {% block content %}
     <div class="jumbotron">
         <div class="container">
           <h1 class="display-3">Life Evaluations Worldwide.</h1>

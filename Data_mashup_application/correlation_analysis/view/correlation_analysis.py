@@ -30,6 +30,6 @@ def analyse_pm_happy():
                            headers={"Content-Type": "application/json", "ACCEPT": accept_tp})
     res_str = result.content.decode()
     res_dict = json.loads(res_str)
-    return render_template("correlation_analysis.html", data=res_dict['data_list'], cols=res_dict['cols'],
+    return render_template("correlation_analysis_new.html", data=res_dict['data_list'], cols=res_dict['cols'],
                            pr=res_dict['pr'], p=res_dict['p_value'], features=res_dict['features'],
                            year=year)
