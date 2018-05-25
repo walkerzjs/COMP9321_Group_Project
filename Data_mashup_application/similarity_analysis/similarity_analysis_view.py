@@ -4,9 +4,9 @@ import os
 import json
 from similarity_analysis import similarity_analysis
 import werkzeug.exceptions as e
-app = Flask(__name__)
-here = os.path.dirname(os.path.abspath(__file__))
-os.chdir(here)
+#app = Flask(__name__)
+#here = os.path.dirname(os.path.abspath(__file__))
+#os.chdir(here)
 mod = Blueprint('similarity_analysis_view', __name__)
 
 

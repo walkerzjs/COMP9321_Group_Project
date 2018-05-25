@@ -4,9 +4,9 @@ import os
 import json
 from correlation_analysis.modules import correlation_analysis_module
 import werkzeug.exceptions as e
-app = Flask(__name__)
-here = os.path.dirname(os.path.abspath(__file__))
-os.chdir(here)
+#app = Flask(__name__)
+#here = os.path.dirname(os.path.abspath(__file__))
+#os.chdir(here)
 cor = Blueprint('correlation_analysis', __name__)
 
 

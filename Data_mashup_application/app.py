@@ -8,9 +8,13 @@ from happiness_ranking_by_country.api import happiness_ranking_api
 from happiness_ranking_by_country.controllers import happiness_ranking_controller
 
 here = os.path.dirname(os.path.abspath(__file__))
+print(here)
 os.chdir(here)
+template_dir = os.path.join(here, 'templates')
+print(__file__)
+print(template_dir)
+app = Flask(__name__, template_folder = template_dir)
 
-app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 app.register_blueprint(correlation_analysis.cor)
 app.register_blueprint(similarity_analysis.mod)
