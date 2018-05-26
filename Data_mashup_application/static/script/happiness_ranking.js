@@ -51,6 +51,7 @@ $(document).ready(function () {
         let _year = $(this).val();
         if (_year !== year) {
             year = _year;
+            $('#dropdown_year_selected').html($(this).text());
             $('#happiness_table_body').prepend('<tr><td colspan="10"><h3>Loading Data ..</h3></td></tr>');
             create_table_body(year, sort_by, ascending);
         }
@@ -60,6 +61,7 @@ $(document).ready(function () {
         let _sort_by = $(this).val();
         if (_sort_by !== sort_by) {
             sort_by = _sort_by;
+            $('#dropdown_sort_selected').html($(this).text());
             create_table_body(year, sort_by, ascending);
         }
     });
