@@ -35,7 +35,7 @@
     <div class="container">
         <h1 class="text-info">Two-Country Comparison</h1>
 
-        <p>Select two countries to see their similarities in happiness and air pollution.</p>
+        <p>Select two countries to see their similarities.</p>
 
         <form action="{{url_for('two_country_comparison.compare_countries')}}" method="POST">
             <label>Please choose year and country: </label>
@@ -61,20 +61,7 @@
         </form>
         <hr>
     </div>
-<!--
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <p><img src="http://www.countryflags.io/{{country1_code}}/shiny/64.png"></p>
-                <p><b>{{country1_input}}</b></p>
-            </div>
-            <div class="col-md-6">
-                <p><img src="http://www.countryflags.io/{{country2_code}}/shiny/64.png"></p>
-                <p><b>{{country2_input}}</b></p>
-            </div>
-        </div>
-    </div>
--->
+
     <div class="container">
         <div class="table-responsive-lg">
             <table class="table table-hover" id="compare_table">
@@ -92,9 +79,49 @@
                     <td><img src="http://www.countryflags.io/{{country2_code}}/shiny/64.png"></td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>Happiness Rank</td>
+                    <td>{{happy_data1['Happiness Rank']}}</td>
+                    <td>{{happy_data2['Happiness Rank']}}</td>
+                </tr>
+                <tr>
+                    <td>Happiness Score</td>
+                    <td>{{happy_data1['Happiness Score']}}</td>
+                    <td>{{happy_data2['Happiness Score']}}</td>
+                </tr>
+                <tr>
+                    <td>GDP</td>
+                    <td>{{happy_data1['Economy GDP per Capita']}}</td>
+                    <td>{{happy_data2['Economy GDP per Capita']}}</td>
+                </tr>
+                <tr>
+                    <td>Social Support</td>
+                    <td>{{happy_data1['Family']}}</td>
+                    <td>{{happy_data2['Family']}}</td>
+                </tr>
+                <tr>
+                    <td>Life Expectancy</td>
+                    <td>{{happy_data1['Health Life Expectancy']}}</td>
+                    <td>{{happy_data2['Health Life Expectancy']}}</td>
+                </tr>
+                <tr>
+                    <td>Freedom</td>
+                    <td>{{happy_data1['Freedom']}}</td>
+                    <td>{{happy_data2['Health Life Expectancy']}}</td>
+                </tr>
+                <tr>
+                    <td>Corruption</td>
+                    <td>{{happy_data1['Trust Government Corruption']}}</td>
+                    <td>{{happy_data2['Trust Government Corruption']}}</td>
+                </tr>
+                <tr>
+                    <td>Generosity</td>
+                    <td>{{happy_data1['Generosity']}}</td>
+                    <td>{{happy_data2['Generosity']}}</td>
+                </tr>
+                    <td>PM2.5 Air Pollution</td>
+                    <td>{{happy_data1['PM2.5 Air Pollution']}}</td>
+                    <td>{{happy_data2['PM2.5 Air Pollution']}}</td>
+                <tr>
                 </tr>
               </tbody>
             </table>
