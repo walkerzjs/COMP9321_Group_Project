@@ -29,9 +29,11 @@
             <a class="nav-link" href="{{url_for('correlation_analysis.analyse_pm_happy_new')}}#chart_div">Correlation Analysis</a>
           </li>
           {% endblock %}
+          {% block navbar_sim %}
           <li class="nav-item" id="nav_item_similar">
-            <a class="nav-link" href="#">Similar Country Searching</a>
+            <a class="nav-link" href="{{url_for('similarity_analysis_view.similarity_analysis_all_new')}}#similarityMap">Similar Country Searching</a>
           </li>
+          {% endblock %}
           <li class="nav-item" id="nav_item_comparison">
             <a class="nav-link" href="#">Two-Country Comparison</a>
           </li>
@@ -59,7 +61,7 @@
           <div class="col-md-4">
             <h4>Similar Country Searching</h4>
             <p>Calculate cosine similarity between countries based on world happiness and pollution, and show the result on a map.</p>
-            <p><a class="btn btn-primary" href="#" role="button">Try It &raquo;</a></p>
+            <p><a class="btn btn-primary" href="{{url_for('similarity_analysis_view.similarity_analysis_all_new')}}#similarityMap" role="button">Try It &raquo;</a></p>
           </div>
           <div class="col-md-4">
             <h4>Two-Country Comparison</h4>

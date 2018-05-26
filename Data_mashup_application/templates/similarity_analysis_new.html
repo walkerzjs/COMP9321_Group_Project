@@ -1,0 +1,125 @@
+{% extends "happiness_ranking.html" %}
+{% block head %}
+{{super()}}
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{% endblock %}
+{% block title %}
+<title>Similar Country Searching</title>
+{% endblock %}
+{% block navbar_sim %}
+          <li class="nav-item active" id="nav_item_correlation">
+            <a class="nav-link" href="{{url_for('similarity_analysis_view.similarity_analysis_all_new')}}#similarityMap">Similar Country Searching</a>
+          </li>
+
+{% endblock%}
+
+{% block navbar_rank %}
+          <li class="nav-item" id="nav_item_happy">
+            <a class="nav-link" href="#similarityMap">Similar Country Searching</a>
+          </li>
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">Life Evaluations Worldwide.</h1>
+          <p>Rock'n Roll presents the World Happiness Report data together with global PM2.5 Air Pollution figures.<br/>
+          Scroll down to see the worldwide happiness ranking, or simply try any analysis | comparison you are interested in.</p>
+          <p><a class="btn btn-primary" href="#happiness_ranking" role="button">See Happiness Ranking</a></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h4>Correlation Analysis</h4>
+            <p>Draw scatter plot between two features from the dataset to analyse their correlations.</p>
+            <p><a class="btn btn-primary" href="{{url_for('correlation_analysis.analyse_pm_happy')}}#chart_div" role="button">Try It &raquo;</a></p>
+          </div>
+          <div class="col-md-4">
+            <h4>Similar Country Searching</h4>
+            <p>Calculate cosine similarity between countries based on world happiness and pollution, and show the result on a map.</p>
+            <p><a class="btn btn-primary" href="#similarityMap" role="button">Try It &raquo;</a></p>
+          </div>
+          <div class="col-md-4">
+            <h4>Two-Country Comparison</h4>
+            <p>Your introduction.</p>
+            <p><a class="btn btn-primary" href="#" role="button">Try It &raquo;</a></p>
+          </div>
+        </div>
+        <hr>
+    </div>
+<!--  chart -->
+		<h1 class="text-info">Similar Country Searching</h1>
+		<p>Calculate cosine similarity between countries based on world happiness and pollution, and show the result on a map.</p>
+			<div id="similarityMap"></div>
+			    <!--select features-->
+    <div>
+
+    <form action="{{url_for('similarity_analysis_view.similarity_analysis_all_new')}}#similarityMap" method="POST">
+        <label>Please choose year and country: </label>
+      	  <select name="year" id="year">
+	          <option value='{{year}}' selected>{{year}}</option>
+              <option value="2015">2015</option>
+              <option value="2016">2016</option>
+
+	      </select>
+	      <select name="country" id="country">
+	        <option value='{{country_input}}' selected>{{country_input}}</option>
+	        {% for country in countries %}
+	        	<option value="{{country}}">{{country}}</option>
+	        {% endfor %}
+	      </select>
+    	  <button type="submit" class="btn btn-primary btn-sm" id="find_similarity">Find similarity</button>
+
+  <!--  chart -->
+{% endblock %}
+
+
+{% block individual_script %}
+	<script>
+		// $('#similarityMap').html('<tr><td colspan="10"><h3>Loading Graph ..</h3></td></tr>');
+		var requestURL = 'http://127.0.0.1:1233/api/similarity/all?country={{country_input}}&year={{year}}';
+		var request = new XMLHttpRequest();
+		request.open('GET', requestURL);
+		request.responseType = 'json';
+		request.send();
+		request.onload = function() {
+	  	var similarity = request.response;
+
+	  	populateMap(similarity);
+		}
+
+		function populateMap(similarity){
+				var data = [{
+					type: 'choropleth',
+					locationmode: 'country names',
+					locations: Object.keys(similarity.Countries),
+					z: Object.values(similarity.Countries),
+					text: Object.keys(similarity.Countries),
+					autocolorscale: true
+				}];
+
+				var layout = {
+						title: 'Similarites between countries (based on Happiness and Pollution)',
+						geo: {
+							projection: {
+								type: 'robinson'
+							}
+						}
+				};
+				
+				Plotly.plot(similarityMap, data, layout, {showLink: true});
+			}
+
+
+		// $(document).ready(function () {
+
+		// 	    $("similarityMap").animate({ 
+		// 	      scrollTop: $( $(this) ).offset().top 
+		// 	    }, 600);
+		// });
+
+	</script>
+{% endblock %}
