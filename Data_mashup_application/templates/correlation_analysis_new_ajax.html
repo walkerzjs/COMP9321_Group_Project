@@ -1,0 +1,187 @@
+{% extends "happiness_ranking.html" %}
+{% block head %}
+{{super()}}
+   
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+{% endblock %}
+
+{% block navbar_cor %}
+          <li class="nav-item active" id="nav_item_correlation">
+            <a class="nav-link" href="#chart_div">Correlation Analysis</a>
+          </li>
+{% endblock%}
+
+{% block navbar_rank %}
+          <li class="nav-item" id="nav_item_happy">
+            <a class="nav-link" href="/#happiness_ranking">Happiness Ranking</a>
+          </li>
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">Life Evaluations Worldwide.</h1>
+          <p>Rock'n Roll presents the World Happiness Report data together with global PM2.5 Air Pollution figures.<br/>
+          Scroll down to see the correlation analysis, or simply try any ranking | comparison you are interested in.</p>
+          <p><a class="btn btn-primary" href="#chart_div" role="button">See Correlation Analysis</a></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h4>Happiness Ranking</h4>
+             <p>These World Happiness and PM2.5 information together shows how people's feeling about their life might correlate with certain social and political factors, as well as the often-ignored environmental costs.</p>
+            <p><a class="btn btn-primary" href="/#happiness_ranking" role="button">Try It &raquo;</a></p>
+          </div>
+          <div class="col-md-4">
+            <h4>Similar Country Searching</h4>
+            <p>Calculate cosine similarity between countries based on world happiness and pollution, and show the result on a map.</p>
+            <p><a class="btn btn-primary" href="#" role="button">Try It &raquo;</a></p>
+          </div>
+          <div class="col-md-4">
+            <h4>Two-Country Comparison</h4>
+            <p>Your introduction.</p>
+            <p><a class="btn btn-primary" href="#" role="button">Try It &raquo;</a></p>
+          </div>
+        </div>
+        <hr>
+    </div>
+<!-- google chart -->
+    <h1 class="text-info">Correlation Analysis</h1>
+    <p>Draw scatter plot between two features from the dataset to analyse their correlations.</p>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    <div><p id = "p_coef"></p>
+    <p id = "p_value"></p></div>
+
+    <div>
+    <!-- <form action="" method="GET"> -->
+        <label>Please choose year and features: </label>
+          <select name="year" id="year">
+            <!-- <option value='{{year}}' selected>{{year}}</option> -->
+              <option value="2015">2015</option>
+              <option value="2016">2016</option>
+
+        </select>
+
+          <select name="pm_happy_feature1" id="pm_happy_feature1">
+
+
+        </select>
+        <select name="pm_happy_feature2" id="pm_happy_feature2">
+
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm" id = "compare">Compare</button>
+
+    <!-- </form> -->
+    <!--select features-->
+    </div>
+  <!-- google chart -->
+{% endblock %}
+
+
+{% block individual_script %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+function correlation_analysis(year, pm_happy_feature1, pm_happy_feature2) {
+
+    $.ajax({
+        url: "{{url_for('correlation_analysis_api.analyse_pm_happy_api')}}",
+        data: {year: year, pm_happy_feature1: pm_happy_feature1, pm_happy_feature2: pm_happy_feature2},
+        success: function (data) {
+            // console.log(data)
+            let table_body = '';
+            let row_list = [];
+
+            google.charts.setOnLoadCallback(drawChart(data));
+            function drawChart(data_input) {
+              let data_list = [[data_input['cols'][1], data_input['cols'][2]]];
+              
+              // console.log("google: ",google.visualization)
+              jQuery.each(data_input['data'], function (index, row){
+
+                data_list.push([ {v: row[1], f:row[0] }, row[2]])
+                  });
+              // console.log("data_list: ",data_list)
+              var data_draw = google.visualization.arrayToDataTable(data_list);
+
+              var options = {
+                title: data_input['year']+' '+data_input['cols'][1]+' vs. '+data_input['cols'][2]+' comparison',
+                hAxis: {title: data_input['cols'][1], minValue: 0},
+                vAxis: {title: data_input['cols'][2], minValue: 0},
+                legend: 'none'
+              };
+
+              var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+              chart.draw(data_draw, options);
+
+              // generate select options
+              let option_list1 = [];
+              let option_list2 = []
+              feature1_selected = 
+              '<option class = "option_feature1" value="'+data['cols'][1]+'" selected>'+data['cols'][1]+'</option>';
+              feature2_selected = 
+              '<option class = "option_feature2" value="'+data['cols'][2]+'" selected>'+data['cols'][2]+'</option>';
+              option_list1.push(feature1_selected);
+              option_list2.push(feature2_selected);
+              jQuery.each(data['features'], function(index, feature){
+                  console.log(feature);
+                  // feature = feature.replace(/ /g, '%20');
+                  option_list1.push('<option class = "option_feature1" value="'+feature+'">'+feature+'</option>');
+                  option_list2.push('<option class = "option_feature2" value="'+feature+'">'+feature+'</option>');
+              });
+              
+
+              $('#pm_happy_feature1').html(option_list1);
+              $('#pm_happy_feature2').html(option_list2);
+              $('#p_coef').html("The Pearson Correlation Coefficient: "+data['pr'].toFixed(3));
+              $('#p_value').html("P_value: "+data['p'].toFixed(3));
+
+            }
+
+   
+        },
+        error: function (response) {
+            console.log(response)
+        }
+    });
+}
+google.charts.load('current', {'packages':['corechart']});
+$(document).ready(function () {
+    let year = '2015';
+    let pm_happy_feature1 = 'PM2.5';
+    let pm_happy_feature2 = 'Happiness Score';
+
+    $('#chart_div').html('<tr><td colspan="10"><h3>Loading Graph ..</h3></td></tr>');
+    correlation_analysis(year, pm_happy_feature1, pm_happy_feature2);
+
+
+      $('#compare').click(function () {
+        let year_input = $('#year').val();
+        let feature1 = $('#pm_happy_feature1').val();
+        let feature2 = $('#pm_happy_feature2').val();
+        year = year_input;
+        pm_happy_feature1 = feature1;
+        pm_happy_feature2 = feature2;
+        // console.log("feature1: ", feature1);
+        // console.log("feature2: ", feature2);
+        // console.log("year: ", year);
+        $('#chart_div').html('<tr><td colspan="10"><h3>Loading Graph ..</h3></td></tr>');
+        correlation_analysis(year, pm_happy_feature1, pm_happy_feature2);
+        // if (feature2 !== pm_happy_feature2) {
+        //     pm_happy_feature2 = feature2;
+        //     $('#chart_div').html('<tr><td colspan="10"><h3>Loading Graph ..</h3></td></tr>');
+            
+        // }
+    });
+
+
+  });
+
+
+
+
+</script>
+{% endblock %}

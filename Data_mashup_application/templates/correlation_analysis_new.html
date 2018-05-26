@@ -7,7 +7,7 @@
 
 {% block navbar_cor %}
           <li class="nav-item active" id="nav_item_correlation">
-            <a class="nav-link" href="{{url_for('correlation_analysis.analyse_pm_happy')}}">Correlation Analysis</a>
+            <a class="nav-link" href="{{url_for('correlation_analysis.analyse_pm_happy')}}#chart_div">Correlation Analysis</a>
           </li>
 {% endblock%}
 
@@ -18,21 +18,21 @@
 {% endblock %}
 
 {% block content %}
-<!--     <div class="jumbotron">
+    <div class="jumbotron">
         <div class="container">
           <h1 class="display-3">Life Evaluations Worldwide.</h1>
           <p>Rock'n Roll presents the World Happiness Report data together with global PM2.5 Air Pollution figures.<br/>
           Scroll down to see the worldwide happiness ranking, or simply try any analysis | comparison you are interested in.</p>
           <p><a class="btn btn-primary" href="#happiness_ranking" role="button">See Happiness Ranking</a></p>
         </div>
-    </div> -->
+    </div>
 
-<!--     <div class="container">
+    <div class="container">
         <div class="row">
           <div class="col-md-4">
             <h4>Correlation Analysis</h4>
             <p>Draw scatter plot between two features from the dataset to analyse their correlations.</p>
-            <p><a class="btn btn-primary" href="{{url_for('correlation_analysis.analyse_pm_happy')}}" role="button">Try It &raquo;</a></p>
+            <p><a class="btn btn-primary" href="{{url_for('correlation_analysis.analyse_pm_happy')}}#chart_div" role="button">Try It &raquo;</a></p>
           </div>
           <div class="col-md-4">
             <h4>Similar Country Searching</h4>
@@ -45,16 +45,17 @@
             <p><a class="btn btn-primary" href="#" role="button">Try It &raquo;</a></p>
           </div>
         </div>
-        <hr> -->
+        <hr>
     </div>
 <!-- google chart -->
+    <h1 class="text-info">Correlation Analysis</h1>
     <div id="chart_div" style="width: 900px; height: 500px;"></div>
 
     <div><p>Pearson Correlation Coefficient: {{ pr|round(2) }}</p>
     <p>P_Value: {{ p|round(5) }}</p></div>
     <!--select features-->
     <div>
-    <form action="{{url_for('correlation_analysis.analyse_pm_happy')}}" method="POST">
+    <form action="{{url_for('correlation_analysis.analyse_pm_happy')}}#chart_div" method="POST">
         <label>Please choose year and features: </label>
           <select name="year" id="year">
             <option value='{{year}}' selected>{{year}}</option>
