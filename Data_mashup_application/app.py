@@ -7,6 +7,7 @@ from similarity_analysis import similarity_analysis_view
 from similarity_analysis import similarity_analysis
 from happiness_ranking_by_country.api import happiness_ranking_api
 from happiness_ranking_by_country.controllers import happiness_ranking_controller
+from two_country_comparison import two_country_comparison
 
 here = os.path.dirname(os.path.abspath(__file__))
 print(here)
@@ -23,6 +24,7 @@ app.register_blueprint(similarity_analysis.mod)
 app.register_blueprint(similarity_analysis_view.mod)
 app.register_blueprint(happiness_ranking_api.mod)
 app.register_blueprint(happiness_ranking_controller.mod)
+app.register_blueprint(two_country_comparison.mod)
 
 CORS(app)
 

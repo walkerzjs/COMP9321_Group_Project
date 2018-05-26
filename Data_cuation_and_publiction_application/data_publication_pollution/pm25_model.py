@@ -68,6 +68,10 @@ def get_entry_by_country(country):
     ap = AirPollution.objects(country=country).first()
     if ap is not None:
         return {"Country": country, "Data": ap.ppy}
+    # try to find entry that contains country name
+    ap = AirPollution.objects(country__contains=country).first()
+    if ap is not None:
+        return {"Country": country, "Data": ap.ppy}
     return None
 
 
@@ -92,6 +96,9 @@ def get_entry_by_filter(year, country):
     try:
         year_str = str(year)
         ap = AirPollution.objects(country=country).first()
+        if ap is not None and year_str in ap.ppy:
+            return {"Country": country, year_str: ap.ppy[year_str]}
+        ap = AirPollution.objects(country__contains=country).first()
         if ap is not None and year_str in ap.ppy:
             return {"Country": country, year_str: ap.ppy[year_str]}
         return None 
