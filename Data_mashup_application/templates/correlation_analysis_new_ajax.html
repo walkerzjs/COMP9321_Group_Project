@@ -1,8 +1,12 @@
 {% extends "happiness_ranking.html" %}
 {% block head %}
 {{super()}}
-   
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+ 
+{% endblock %}
+
+{% block title %}
+<title>Correlation Analysis</title>
 {% endblock %}
 
 {% block navbar_cor %}
@@ -37,7 +41,7 @@
           <div class="col-md-4">
             <h4>Similar Country Searching</h4>
             <p>Calculate cosine similarity between countries based on world happiness and pollution, and show the result on a map.</p>
-            <p><a class="btn btn-primary" href="#" role="button">Try It &raquo;</a></p>
+            <p><a class="btn btn-primary" href="{{url_for('similarity_analysis_view.similarity_analysis_all_new')}}#similarityMap" role="button">Try It &raquo;</a></p>
           </div>
           <div class="col-md-4">
             <h4>Two-Country Comparison</h4>
@@ -81,7 +85,7 @@
 
 
 {% block individual_script %}
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <script type="text/javascript">
 
 function correlation_analysis(year, pm_happy_feature1, pm_happy_feature2) {
