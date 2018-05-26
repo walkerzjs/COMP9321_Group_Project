@@ -15,3 +15,4 @@ six==1.11.0
 Werkzeug==0.14.1
 mongoengine==0.15.0
 xlrd==1.1.0
+requests==2.18.4
