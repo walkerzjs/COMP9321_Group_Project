@@ -1,7 +1,7 @@
 {% extends "happiness_ranking.html" %}
 {% block head %}
 {{super()}}
-   
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
  
 {% endblock %}
 
@@ -85,7 +85,7 @@
 
 
 {% block individual_script %}
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <script type="text/javascript">
 
 function correlation_analysis(year, pm_happy_feature1, pm_happy_feature2) {
