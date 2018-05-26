@@ -33,14 +33,14 @@
     <div class="container">
         <div class="row">
           <div class="col-md-4">
-            <h4>Correlation Analysis</h4>
-            <p>Draw scatter plot between two features from the dataset to analyse their correlations.</p>
-            <p><a class="btn btn-primary" href="{{url_for('correlation_analysis.analyse_pm_happy')}}#chart_div" role="button">Try It &raquo;</a></p>
+            <h4>Happiness Ranking</h4>
+             <p>These World Happiness and PM2.5 information together shows how people's feeling about their life might correlate with certain social and political factors, as well as the often-ignored environmental costs.</p>
+            <p><a class="btn btn-primary" href="/#happiness_ranking" role="button">Try It &raquo;</a></p>
           </div>
           <div class="col-md-4">
-            <h4>Similar Country Searching</h4>
-            <p>Calculate cosine similarity between countries based on world happiness and pollution, and show the result on a map.</p>
-            <p><a class="btn btn-primary" href="#similarityMap" role="button">Try It &raquo;</a></p>
+            <h4>Correlation Analysis</h4>
+            <p>Draw scatter plot between two features from the dataset to analyse their correlations.</p>
+            <p><a class="btn btn-primary" href="{{url_for('correlation_analysis.analyse_pm_happy_new')}}#chart_div" role="button">Try It &raquo;</a></p>
           </div>
           <div class="col-md-4">
             <h4>Two-Country Comparison</h4>
@@ -72,6 +72,7 @@
 	        {% endfor %}
 	      </select>
     	  <button type="submit" class="btn btn-primary btn-sm" id="find_similarity">Find similarity</button>
+    </form>
 
   <!--  chart -->
 {% endblock %}
