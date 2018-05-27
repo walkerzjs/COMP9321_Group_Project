@@ -16,28 +16,36 @@ class AirPollution(Document):
 pm25_link = 'http://api.worldbank.org/v2/en/indicator/EN.ATM.PM25.MC.M3?downloadformat=excel'
 pm25_file = './data_publication_pollution/API_EN.ATM.PM25.MC.M3_DS2_en_excel_v2_9911760.xls'
 temp_file = './data_publication_pollution/raw_pm25.xls'
-#connect(host='mongodb://admin:password@ds229450.mlab.com:29450/9321-ass3')
-connect(host='mongodb://pm25:COMP9321@ds235778.mlab.com:35778/comp9321_ass3')
+connect(host='mongodb://admin:password@ds229450.mlab.com:29450/9321-ass3')
+#connect(host='mongodb://pm25:COMP9321@ds235778.mlab.com:35778/comp9321_ass3')
 collection_created = False
 
 _entry_check = AirPollution.objects().first()
 if _entry_check is not None:
     collection_created = True
+
+
 def download_pm(pm25_link, pm25_file, temp_file):
     urllib.request.urlretrieve(pm25_link, pm25_file)
 #    f_xls = pd.read_excel(temp_file)
 #    result = f_xls.iloc[2:]
 #    result.to_excel(pm25_file,header=False, index=False)
 
+
 def import_ap_data():
-    if not os.path.exists(pm25_file):
-        download_pm(pm25_link, pm25_file, temp_file)
+    #if not os.path.exists(pm25_file):
+    #    download_pm(pm25_link, pm25_file, temp_file)
+    global collection_created
     xl_workbook = xlrd.open_workbook(pm25_file)
     xl_sheet = xl_workbook.sheet_by_index(0)
-    for row in range(4, 267):
-        print(row)
+    for row in range(4, 268):
         country = xl_sheet.cell_value(row, 0)
-        # FIXME filter out country groups if needed
+        if country == 'Russian Federation':
+            country = 'Russia'
+        elif country == 'Iran, Islamic Rep.':
+            country = 'Iran'
+        elif country == 'Egypt, Arab Rep.':
+            country = 'Egypt'
         ppy_data = {}
         year_count = 0
         for year in range(1960, 2017):
@@ -55,6 +63,7 @@ def import_ap_data():
         if year_count > 0:
             ap = AirPollution(country, ppy_data)
             ap.save()
+    collection_created = True
 
 
 def get_collection():
