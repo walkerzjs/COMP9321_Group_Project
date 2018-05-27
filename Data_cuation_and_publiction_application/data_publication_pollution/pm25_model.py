@@ -46,6 +46,10 @@ def import_ap_data():
             country = 'Iran'
         elif country == 'Egypt, Arab Rep.':
             country = 'Egypt'
+        elif country == 'Korea, Rep.':
+            country = 'South Korea'
+        elif country == 'Congo, Dem. Rep.':
+            country = 'Congo (Kinshasa)'
         ppy_data = {}
         year_count = 0
         for year in range(1960, 2017):
