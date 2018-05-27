@@ -142,7 +142,8 @@ def compute_similarity_all():
         if country in allCountryJSONPollution:
             countryArray.append(allCountryJSONPollution[country])
         else:
-            countryArray.append(0)
+#            countryArray.append(0)
+            continue
 
         result = 1 - spatial.distance.cosine(country1Array, countryArray)
 
