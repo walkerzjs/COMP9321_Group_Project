@@ -16,8 +16,8 @@ class AirPollution(Document):
 pm25_link = 'http://api.worldbank.org/v2/en/indicator/EN.ATM.PM25.MC.M3?downloadformat=excel'
 pm25_file = './data_publication_pollution/API_EN.ATM.PM25.MC.M3_DS2_en_excel_v2_9911760.xls'
 temp_file = './data_publication_pollution/raw_pm25.xls'
-connect(host='mongodb://admin:password@ds229450.mlab.com:29450/9321-ass3')
-#connect(host='mongodb://pm25:COMP9321@ds235778.mlab.com:35778/comp9321_ass3')
+#connect(host='mongodb://admin:password@ds229450.mlab.com:29450/9321-ass3')
+connect(host='mongodb://pm25:COMP9321@ds235778.mlab.com:35778/comp9321_ass3')
 collection_created = False
 
 _entry_check = AirPollution.objects().first()
@@ -33,8 +33,8 @@ def download_pm(pm25_link, pm25_file, temp_file):
 
 
 def import_ap_data():
-    #if not os.path.exists(pm25_file):
-    #    download_pm(pm25_link, pm25_file, temp_file)
+    if not os.path.exists(pm25_file):
+        download_pm(pm25_link, pm25_file, temp_file)
     global collection_created
     xl_workbook = xlrd.open_workbook(pm25_file)
     xl_sheet = xl_workbook.sheet_by_index(0)
