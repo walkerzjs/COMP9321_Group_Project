@@ -1,0 +1,138 @@
+{% extends "happiness_ranking.html" %}
+{% block title %}<title>Two-Country Comparison - Rock 'n Roll</title>{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand text-warning" href='/'>Rock'n Roll</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <!-- Must reset the active class for nav-items in javascript on page loading if not home page. -->
+  <div class="collapse navbar-collapse" id="navbar">
+    <ul class="navbar-nav mr-auto">
+    {% block navbar_rank %}
+      <li class="nav-item" id="nav_item_happy">
+        <a class="nav-link" href="/#happiness_ranking">Happiness Ranking</a>
+      </li>
+      {% endblock %}
+      {% block navbar_cor %}
+      <li class="nav-item" id="nav_item_correlation">
+        <a class="nav-link" href="{{url_for('correlation_analysis.analyse_pm_happy_new')}}#chart_div">Correlation Analysis</a>
+      </li>
+      {% endblock %}
+      <li class="nav-item" id="nav_item_similar">
+        <a class="nav-link" href="{{url_for('similarity_analysis_view.similarity_analysis_all_new')}}#similarityMap">Similar Country Searching</a>
+      </li>
+      <li class="nav-item active" id="nav_item_comparison">
+        <a class="nav-link" href="{{url_for('two_country_comparison.compare_countries')}}">Two-Country Comparison</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-info">Two-Country Comparison</h1>
+
+        <p>Select two countries to see their similarities.</p>
+
+        <form action="{{url_for('two_country_comparison.compare_countries')}}" method="POST">
+            <label>Please choose year and country: </label>
+              <select name="year" id="year">
+                      <option value='{{year}}' selected hidden>{{year}}</option>
+                  <option value="2015">2015</option>
+                  <option value="2016">2016</option>
+
+                  </select>
+                  <select name="country1" id="country1">
+                    <option value='{{country1_input}}' selected hidden>{{country1_input}}</option>
+                    {% for country in countries %}
+                            <option value="{{country}}">{{country}}</option>
+                    {% endfor %}
+                  </select>
+                  <select name="country2" id="country2">
+                    <option value='{{country2_input}}' selected hidden>{{country2_input}}</option>
+                    {% for country in countries %}
+                            <option value="{{country}}">{{country}}</option>
+                    {% endfor %}
+                  </select>
+              <button type="submit" class="btn btn-primary btn-sm">Compare Countries</button>
+        </form>
+        <hr>
+    </div>
+
+    <div class="container">
+        <div class="table-responsive-lg">
+            <table class="table table-hover" id="compare_table">
+              <thead class="thead-dark" id="compare_table_head">
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">{{country1_input}}</th>
+                  <th scope="col">{{country2_input}}</th>
+                </tr>
+              </thead>
+              <tbody id="compare_table_body">
+                <tr>
+                    <td>Flag</td>
+                    <td><img src="http://www.countryflags.io/{{country1_code}}/shiny/64.png"></td>
+                    <td><img src="http://www.countryflags.io/{{country2_code}}/shiny/64.png"></td>
+                </tr>
+                <tr>
+                    <td>Happiness Rank</td>
+                    <td>{{happy_data1['Happiness Rank']}}</td>
+                    <td>{{happy_data2['Happiness Rank']}}</td>
+                </tr>
+                <tr>
+                    <td>Happiness Score</td>
+                    <td>{{happy_data1['Happiness Score']}}</td>
+                    <td>{{happy_data2['Happiness Score']}}</td>
+                </tr>
+                <tr>
+                    <td>GDP</td>
+                    <td>{{happy_data1['Economy GDP per Capita']}}</td>
+                    <td>{{happy_data2['Economy GDP per Capita']}}</td>
+                </tr>
+                <tr>
+                    <td>Social Support</td>
+                    <td>{{happy_data1['Family']}}</td>
+                    <td>{{happy_data2['Family']}}</td>
+                </tr>
+                <tr>
+                    <td>Life Expectancy</td>
+                    <td>{{happy_data1['Health Life Expectancy']}}</td>
+                    <td>{{happy_data2['Health Life Expectancy']}}</td>
+                </tr>
+                <tr>
+                    <td>Freedom</td>
+                    <td>{{happy_data1['Freedom']}}</td>
+                    <td>{{happy_data2['Health Life Expectancy']}}</td>
+                </tr>
+                <tr>
+                    <td>Corruption</td>
+                    <td>{{happy_data1['Trust Government Corruption']}}</td>
+                    <td>{{happy_data2['Trust Government Corruption']}}</td>
+                </tr>
+                <tr>
+                    <td>Generosity</td>
+                    <td>{{happy_data1['Generosity']}}</td>
+                    <td>{{happy_data2['Generosity']}}</td>
+                </tr>
+                    <td>PM2.5 Air Pollution</td>
+                    <td>{{happy_data1['PM2.5 Air Pollution']}}</td>
+                    <td>{{happy_data2['PM2.5 Air Pollution']}}</td>
+                <tr>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+        <hr>
+    </div>
+    <div class="container">
+    <p><b>Similarity of {{country1_input}} and {{country2_input}} is {{similarity_percent}}.</b></p>
+    </div>
+{% endblock %}
+
+{% block script %}
+<!-- no script -->
+{% endblock %}
